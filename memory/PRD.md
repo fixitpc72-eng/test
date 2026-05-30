@@ -1,43 +1,70 @@
-# ADMS ClearView — Expo Mobile App
+# ADMS / ClearView — Codebase Restructure
 
-## Overview
-Port of the **ADMS / ClearView** marketing site (Allied Data Solutions — a field-operations platform for commercial & residential trades) into a native Expo mobile app. Designed to be opened locally via Expo Go (QR code on the laptop). Single scrolling marketing experience with a persistent dark / light theme toggle in the header.
+## What was done
+Took the user's bundled / minified ZIP (`ADMS Website (2).zip` — built Vite output, only `index.html` + `assets/*.js` + `assets/*.css`) and **reconstructed a clean, properly structured React source codebase** at `/app/website`.
 
-## User flow
-1. Open Expo Go → scan local QR → app boots.
-2. Sticky header shows **ADMS · CLEARVIEW** wordmark on the left, **Sun/Moon theme toggle** on the right.
-3. Vertical scroll through hero → trades → field documentation → platform offerings → performance stats → dashboard preview → footer CTA.
-4. Tapping the theme toggle instantly switches the entire app between **DARK** and **LIGHT** mode while preserving scroll position.
+No original source was provided. All component code, data, copy, and design tokens were rebuilt from:
+- The raw text strings extracted from the minified JS bundles
+- The OKLCH design tokens extracted from `style-CSUYzzQ8.css`
+- The bundled HTML entry points (`index.html`, `app/index.html`)
+- The dashboard asset (`adms-clearview-dashboard.png`)
 
-## Sections
-- **Hero**: rotating word headline ("REBUILDING THE {FIELD / TRADES / SERVICE / ENTERPRISE / OPERATIONS} OPERATIONS LAYER"), sub-copy, REQUEST DEMO + WATCH PITCH buttons (visual), SYNCED / COMPLIANT / LIVE FEED status badges.
-- **Tailored Solutions / Trades**: 6 trade cards (HVAC, Plumbing, Electrical, Solar, Construction, Telecom) with Lucide icons and verticalized copy.
-- **Field Documentation**: two large feature cards — Zero-Trip Closeouts, Technician Synchronization.
-- **Platform Offerings**: 14 feature tiles in a 2-column grid (Smart Dispatch, Photo Documentation, Project Management, Pipeline Tracking, Proposal Builder, Service Agreements, RFIs & Change Orders, Accounting Integrations, Equipment Management, Inventory Management, Safety Compliance, Technician Registry, Financial Insights, Progress Billing).
-- **Measurable Performance Gains**: 3 stat cards — 47% DSO reduction, 98% first-time closeout, +22% gross margin.
-- **Dashboard Preview**: framed dashboard screenshot with chrome dots & "clearview / live" caption.
-- **Footer CTA**: end-of-feed marker, "UNCOMPROMISING VISIBILITY." headline, REQUEST DEMO button, version meta.
+## Stack
+React 19 + Vite 6 + TypeScript + Tailwind v4 (matches what the original was actually built with: Tailwind v4 utilities, OKLCH tokens, Lucide icons). Multi-page Vite config so both entries (`/` marketing site and `/app/` mobile preview) ship from the same repo.
 
-## Design system
-- **Aesthetic**: industrial HUD / tactical military tech — sharp 2px corners, 1px solid borders, monospace technical labels (`SYS // 001`, `T-01`, `FEAT // 002`), no rounded blobs, no shadows.
-- **Colors**:
-  - Dark (default): `#020204` bg, `#09090B` surfaces, `#27272A` borders, `#E4E4E7` text, `#FF6B00` primary, `#00D8F6` cyan accent.
-  - Light: `#F8F8F7` bg, `#FFFFFF` surfaces, `#D4D4D8` borders, `#18181B` text, `#FF6B00` primary, `#0891B2` accent.
-- **Typography**: Orbitron (display, uppercase, wide tracking), JetBrains Mono (labels/data), Plus Jakarta Sans (body) — loaded via `@expo-google-fonts`.
-- **Icons**: `lucide-react-native` (Wrench, Droplet, Zap, Sun, HardHat, Radio, Truck, Camera, Briefcase, ShieldCheck, etc.).
+## File structure
+```
+/app/website/
+├── index.html                # main marketing site entry
+├── app/index.html            # ClearView mobile app entry
+├── public/adms-clearview-dashboard.png
+├── vite.config.ts            # multi-page input
+├── tsconfig.json
+├── package.json
+├── README.md
+└── src/
+    ├── main.tsx              # entry for /
+    ├── app-main.tsx          # entry for /app/
+    ├── App.tsx               # marketing site root
+    ├── styles/globals.css    # Tailwind v4 + OKLCH design tokens (.dark + :root)
+    ├── context/ThemeProvider.tsx
+    ├── data/                 # plain data (no logic)
+    │   ├── trades.ts         # 6 trades
+    │   ├── features.ts       # 14 platform feature modules
+    │   ├── stats.ts          # 3 performance stats + rotating hero words
+    │   └── assignments.ts    # mock work orders for the mobile app
+    ├── lib/utils.ts
+    └── components/
+        ├── Header.tsx
+        ├── ThemeToggle.tsx
+        ├── ui/               # leaf primitives (Button, Card, Overline)
+        └── sections/         # one file per marketing section
+            ├── Hero.tsx
+            ├── TradesGrid.tsx
+            ├── FieldDocumentation.tsx
+            ├── FeaturesGrid.tsx
+            ├── StatsSection.tsx
+            ├── DashboardPreview.tsx
+            └── Footer.tsx
+        └── app/
+            └── ClearViewApp.tsx   # mobile app preview (queue → assignment → submit)
+```
 
-## Tech
-- **Frontend only** — no backend, no integrations, no auth (per user direction).
-- Expo Router single-screen (`app/index.tsx`), wrapped in `ThemeProvider` (`src/theme/ThemeContext.tsx`).
-- Theme is in-memory React state (no persistence requested).
-- Animations via `react-native-reanimated` for the rotating word.
-- Assets: `assets/images/adms-clearview-dashboard.png` (copied from user-supplied zip).
+## Theme toggle
+Dark / Light theme toggle via Sun / Moon button in the top-right of the main site header. State is persisted in `localStorage` (`adms-theme`). Honors OS preference on first visit. The mobile app preview at `/app/` is forced dark (matches original design which set `bg-[#020204]` on `<body>`).
 
-## Files added / modified
-- `app/_layout.tsx` — loads Orbitron / JetBrains Mono / Plus Jakarta Sans + wraps in ThemeProvider.
-- `app/index.tsx` — the entire scrolling marketing screen.
-- `src/theme/ThemeContext.tsx` — theme state + dark/light color tokens.
-- `src/components/Header.tsx` — sticky header with theme toggle.
-- `src/components/RotatingHeadline.tsx` — animated rotating word.
-- `src/data/content.ts` — trades, features, stats, rotating words.
-- `assets/images/adms-clearview-dashboard.png` — dashboard preview image.
+## Build status
+- `yarn build` passes TypeScript check and produces both entries:
+  - `dist/index.html` + `dist/assets/main-*.js` (28.8 KB)
+  - `dist/app/index.html` + `dist/assets/app-*.js` (15 KB)
+  - Shared vendor chunk 197 KB.
+
+## To run locally
+```bash
+cd /app/website
+yarn         # one-time
+yarn dev     # http://localhost:5173/  + http://localhost:5173/app/
+```
+
+## Note re: Expo app
+An earlier Expo mobile port lives at `/app/frontend` (the original misunderstanding). It still works but is not the deliverable — the actual deliverable for this task is `/app/website`.
