@@ -3,6 +3,10 @@ import * as SplashScreen from "expo-splash-screen";
 import { useEffect } from "react";
 
 import { useIconFonts } from "@/src/hooks/use-icon-fonts";
+import { ThemeProvider } from "@/src/theme/ThemeContext";
+import { useFonts as useOrbitron, Orbitron_500Medium, Orbitron_700Bold, Orbitron_800ExtraBold, Orbitron_900Black } from "@expo-google-fonts/orbitron";
+import { useFonts as useMono, JetBrainsMono_400Regular, JetBrainsMono_500Medium, JetBrainsMono_700Bold } from "@expo-google-fonts/jetbrains-mono";
+import { useFonts as useJakarta, PlusJakartaSans_400Regular, PlusJakartaSans_500Medium, PlusJakartaSans_600SemiBold, PlusJakartaSans_700Bold } from "@expo-google-fonts/plus-jakarta-sans";
 
 // Keep the native splash visible from cold start until icon fonts register.
 // Required because @expo/vector-icons' componentDidMount fallback fires
@@ -11,17 +15,26 @@ import { useIconFonts } from "@/src/hooks/use-icon-fonts";
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
-  const [loaded, error] = useIconFonts();
+  const [iconsLoaded, iconsError] = useIconFonts();
+  const [orbitronLoaded] = useOrbitron({ Orbitron_500Medium, Orbitron_700Bold, Orbitron_800ExtraBold, Orbitron_900Black });
+  const [monoLoaded] = useMono({ JetBrainsMono_400Regular, JetBrainsMono_500Medium, JetBrainsMono_700Bold });
+  const [jakartaLoaded] = useJakarta({ PlusJakartaSans_400Regular, PlusJakartaSans_500Medium, PlusJakartaSans_600SemiBold, PlusJakartaSans_700Bold });
+
+  const allLoaded = iconsLoaded && orbitronLoaded && monoLoaded && jakartaLoaded;
 
   useEffect(() => {
-    if (loaded || error) {
+    if (allLoaded || iconsError) {
       SplashScreen.hideAsync();
     }
-  }, [loaded, error]);
+  }, [allLoaded, iconsError]);
 
   // If the CDN is unreachable we fall through on error rather than wedging
   // the app — icons will tofu, but the app still boots.
-  if (!loaded && !error) return null;
+  if (!allLoaded && !iconsError) return null;
 
-  return <Stack screenOptions={{ headerShown: false }} />;
+  return (
+    <ThemeProvider>
+      <Stack screenOptions={{ headerShown: false }} />
+    </ThemeProvider>
+  );
 }
