@@ -1,0 +1,133 @@
+{
+  "theme_and_archetype": {
+    "domain": "Enterprise B2B SaaS for Field Operations",
+    "theme": "Dark (Primary) with Light toggle support",
+    "archetype": "Archetype 4 (Swiss & High-Contrast) + Industrial HUD / Tactical Military Tech",
+    "description": "A dense, high-performance 'control center' feel. Think military drone operators or industrial supervisors. Sharp corners, highly legible monospace labels, dark zinc backgrounds, and piercing neon accents for statuses."
+  },
+  "typography": {
+    "fonts": {
+      "headings": {
+        "family": "Orbitron",
+        "weight": "bold",
+        "description": "Used strictly for display headings (H1, H2, H3), always UPPERCASE, with wide tracking."
+      },
+      "labels_data": {
+        "family": "JetBrains Mono",
+        "weight": "medium",
+        "description": "Used for all technical labels, numbers, stat callouts, navigation links, and small overlines."
+      },
+      "body": {
+        "family": "Plus Jakarta Sans",
+        "weight": "regular",
+        "description": "Used for body paragraphs and descriptive text for legibility."
+      }
+    },
+    "scale_react_native": {
+      "h1": { "fontSize": 32, "lineHeight": 40, "letterSpacing": 2, "textTransform": "uppercase" },
+      "h2": { "fontSize": 24, "lineHeight": 32, "letterSpacing": 1.5, "textTransform": "uppercase" },
+      "h3": { "fontSize": 18, "lineHeight": 24, "letterSpacing": 1, "textTransform": "uppercase" },
+      "body": { "fontSize": 14, "lineHeight": 22, "letterSpacing": 0 },
+      "label": { "fontSize": 11, "lineHeight": 14, "letterSpacing": 1.5, "textTransform": "uppercase" },
+      "stat": { "fontSize": 40, "lineHeight": 48, "letterSpacing": -1 }
+    }
+  },
+  "colors": {
+    "dark": {
+      "background": "#020204",
+      "surface": "#09090B",
+      "border": "#27272A",
+      "text_primary": "#E4E4E7",
+      "text_secondary": "#A1A1AA",
+      "primary": "#FF6B00",
+      "accent": "#00D8F6"
+    },
+    "light": {
+      "background": "#F8F8F7",
+      "surface": "#FFFFFF",
+      "border": "#D4D4D8",
+      "text_primary": "#18181B",
+      "text_secondary": "#52525B",
+      "primary": "#FF6B00",
+      "accent": "#00D8F6"
+    },
+    "rules": {
+      "primary_usage": "Only for primary action buttons ('REQUEST DEMO') and critical highlights.",
+      "accent_usage": "For data points, active states, and small techy HUD adornments (like 1px corner borders or active icon colors).",
+      "surface_contrast": "Surfaces (cards) must have sharp 1px borders in the exact border color to define them from the background."
+    }
+  },
+  "spacing_and_layout": {
+    "base_padding": 24,
+    "border_radius": 2,
+    "structural_rules": {
+      "container": "Use SafeAreaView. The main scroll area must have a minimum horizontal padding of 20px.",
+      "cards": "Cards must be completely flat (no shadow). They rely entirely on a 1px solid border (zinc-800 dark / zinc-300 light) with a 2px border radius to feel like a structural metal panel.",
+      "headers": "Sticky header (z-index 50) with blurred or solid background. Must contain ADMS logo (text), and Sun/Moon toggle button aligned right."
+    }
+  },
+  "motion": {
+    "description": "Restrained, technical motion. Avoid bouncy physics.",
+    "rules": {
+      "theme_toggle": "Smooth fade/crossfade transition between dark and light variables (react-native-reanimated).",
+      "scroll": "Smooth native scroll. Consider subtle opacity fades for sections as they enter the screen."
+    }
+  },
+  "image_urls": {
+    "hero_texture_dark": {
+      "url": "https://static.prod-images.emergentagent.com/jobs/416d3ee7-8ed9-4d96-8719-fbfb768edce1/images/c842149c9249287c54ad062a564896efbfaba53f99e572d689b8f1a025c92978.png",
+      "category": "background",
+      "description": "Tactical HUD dark texture. Apply as an absolute background in the Hero section with low opacity (0.1 - 0.2) to give an industrial scanning grid feel."
+    },
+    "hero_texture_light": {
+      "url": "https://static.prod-images.emergentagent.com/jobs/416d3ee7-8ed9-4d96-8719-fbfb768edce1/images/83ede984fa802d4107839c89b1f6c8c54655250b6a2f1a4213bb2dd138cfcdc6.png",
+      "category": "background",
+      "description": "Tactical HUD light texture. Apply as an absolute background in the Hero section with low opacity (0.05 - 0.1) in light mode."
+    },
+    "dashboard_preview": {
+      "url": "adms-clearview-dashboard.png",
+      "category": "product_showcase",
+      "description": "The actual dashboard screenshot. Must be rendered with a sharp 1px border and 2px border-radius, perhaps inside a padded view to look like a screen inside a rugged case."
+    }
+  },
+  "components": {
+    "navigation": {
+      "type": "sticky_header",
+      "elements": "ADMS Wordmark (Orbitron, bold), Theme Toggle (Sun/Moon icon).",
+      "styles": "Height 60px, solid bottom border 1px. Background must be solid or blurred surface color."
+    },
+    "hero": {
+      "layout": "Vertical stack, generous padding (pt-12, pb-16).",
+      "elements": {
+        "headline": "'REBUILDING THE [rotating word] OPERATIONS LAYER' in Orbitron.",
+        "taglines": "Monospace (JetBrains Mono), small, accent colored (Cyan), with a techy overline look.",
+        "subtext": "Plus Jakarta Sans body text.",
+        "ctas": "Primary 'REQUEST DEMO' button: background #FF6B00, text #000000 (for high contrast), sharp 2px radius, monospace bold label. Secondary CTA: outline button."
+      }
+    },
+    "trades_grid": {
+      "layout": "2-column grid or single column of wide cards. Since it's mobile, a vertical list of slightly inset cards with a left accent border (Cyan) works well for a HUD feel.",
+      "card_style": "1px border, 2px radius. Icon (lucide-react-native) on left, Title (Orbitron) + Description (Plus Jakarta) on right."
+    },
+    "features_scroll": {
+      "layout": "Horizontal ScrollView with snap-to-interval or a dense vertical grid.",
+      "card_style": "High-density technical look. Monospace overline, clear Orbitron heading, solid border."
+    },
+    "stats_section": {
+      "layout": "Vertical stack of 3 large numbers.",
+      "text_style": "Numbers in JetBrains Mono, huge (fontSize 40+), colored in Primary Orange or Cyan. Labels in Monospace uppercase."
+    }
+  },
+  "instructions_to_main_agent": [
+    "1. FRAMEWORK: Use React Native / Expo. Use StyleSheet for styling or a styling solution configured in the workspace.",
+    "2. THEME TOGGLE: Implement a global theme state that switches the color variables smoothly. Ensure the Sun/Moon toggle is always accessible in the header.",
+    "3. FONTS: You must load and use 'Orbitron', 'JetBrains Mono', and 'Plus Jakarta Sans'. If they are not available locally, use expo-font to load them from Google Fonts. Do NOT fallback to system fonts unless absolutely necessary while loading.",
+    "4. ICONS: Use 'lucide-react-native'.",
+    "5. BORDERS & SHAPES: Maintain the 'military tech' aesthetic. DO NOT use soft, large border radii (like 12px or 16px). All corners must be sharp (2px). DO NOT use drop shadows. Use 1px solid borders to define depth.",
+    "6. TESTING: Every interactive element (buttons, toggles) must have a 'testID' attribute in React Native (equivalent to data-testid).",
+    "7. SAFE AREA: Ensure you wrap the main screen in a SafeAreaView.",
+    "8. PERFORMANCE: Use 'react-native-reanimated' for the rotating word in the hero ('HVAC', 'PLUMBING', etc.) and for the theme transition if possible, otherwise standard React Native Animated.",
+    "9. ASSETS: Use the provided dashboard image path ('adms-clearview-dashboard.png') directly using require() if it is local, or however the asset system is set up.",
+    "10. SCROLLING: Keep it a single scrolling screen (marketing landing page style). No bottom tabs."
+  ]
+}
